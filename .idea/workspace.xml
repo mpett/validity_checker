@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a90a90bc-ac18-4be8-9b49-ba92f78b6c81" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ValidityChecker.java" afterPath="$PROJECT_DIR$/src/ValidityChecker.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ValidityCheck.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,8 +28,8 @@
       <file leaf-file-name="ValidityChecker.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ValidityChecker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2788104" vertical-offset="0" max-vertical-offset="1365">
-              <caret line="20" column="44" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
+            <state vertical-scroll-proportion="0.8466543" vertical-offset="559" max-vertical-offset="1635">
+              <caret line="98" column="31" selection-start-line="98" selection-start-column="31" selection-end-line="98" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#437#452#0" expanded="true" />
@@ -370,8 +368,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/ValidityChecker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2788104" vertical-offset="0" max-vertical-offset="1365">
-          <caret line="20" column="44" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
+        <state vertical-scroll-proportion="0.8466543" vertical-offset="559" max-vertical-offset="1635">
+          <caret line="98" column="31" selection-start-line="98" selection-start-column="31" selection-end-line="98" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#437#452#0" expanded="true" />

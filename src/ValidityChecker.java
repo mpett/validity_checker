@@ -15,12 +15,11 @@ public class ValidityChecker {
         ValidityCheckNotNull notNullCheck = new ValidityCheckNotNull();
         ValidityCheckIsPersonalRegistratinonNumber numberCheck =
                 new ValidityCheckIsPersonalRegistratinonNumber();
-        list.add(notNullCheck); list.add(numberCheck);
-        String data = "lol";
-        numberCheck.performValidation(data);
-        list.get(1).performValidation(data);
+        ValidityCheckNotNull notNullCheck2 = new ValidityCheckNotNull();
+        String data = "19910127-3416";
+        list.add(notNullCheck); list.add(numberCheck); list.add(notNullCheck2);
         ValidityChecker checker = new ValidityChecker(list, data);
-        checker.validate();
+        checker.performValidation();
     }
 
     public ValidityChecker(List<ValidityCheck> validityCheckList, Object candidateData) {
@@ -30,33 +29,27 @@ public class ValidityChecker {
 
     public static void validate(List<ValidityCheck> validityCheckList, Object candidateData) {
         for (ValidityCheck validityCheck : validityCheckList) {
-            if (!validityCheck.performValidation(candidateData))
+            if (!validityCheck.validate(candidateData))
                 validity = false;
         }
 
         validity = true;
     }
 
-    public void validate() {
-        for (ValidityCheck validityCheck : validityCheckList) {
-            if (!validityCheck.performValidation(candidateData))
-                validity = false;
-        }
-
-        validity = true;
+    public void performValidation() {
+        for (ValidityCheck validityCheck : validityCheckList)
+            validityCheck.validate(candidateData);
     }
 }
 
 abstract class ValidityCheck {
-    public abstract boolean performValidation(Object candidateData);
-    //Empty
+    public abstract boolean validate(Object candidateData);
 }
 
 class ValidityCheckNotNull extends ValidityCheck {
-
     private static boolean validity;
 
-    public boolean performValidation(Object inputData) {
+    public boolean validate(Object inputData) {
         System.err.println("validating null");
         try {
             validity = (inputData == null);
@@ -69,18 +62,43 @@ class ValidityCheckNotNull extends ValidityCheck {
 }
 
 class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
-    private static String personalRegistrationNumber;
-
+    private static int civicNumber;
+    private static int controlDigit;
     private static boolean validity;
 
-    public boolean performValidation(Object inputData) {
+    public boolean validate(Object inputData) {
         System.err.println("validating civic number");
+
         try {
-            personalRegistrationNumber = inputData.toString();
+            String inputString = inputData.toString();
+            inputString = inputString.replaceAll("-", "");
+
+            if (inputString.length() < 10 || inputString.length() > 12)
+                throw new Exception();
+
+            if (inputString.length() == 12)
+                inputString = inputString.substring(2);
+
+            char lastDigit = inputString.charAt(9);
+            inputString = inputString.substring(0, 9);
+
+            civicNumber = Integer.parseInt(inputString);
+            controlDigit = Integer.parseInt(String.valueOf(lastDigit));
+
+
         } catch (Exception exception) {
+            System.err.println("Civic number exception");
             validity = false;
+            return validity;
         }
 
+        System.err.println("Civic number: " + civicNumber);
+        System.err.println("control digit: " + controlDigit);
+
+        // If we get here, then we should have a nine digit integer
+        // and a control digit.
+
+        validity = true;
         return validity;
     }
 }
