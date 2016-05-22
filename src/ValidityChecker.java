@@ -16,7 +16,7 @@ public class ValidityChecker {
         ValidityCheckIsPersonalRegistratinonNumber numberCheck =
                 new ValidityCheckIsPersonalRegistratinonNumber();
         ValidityCheckNotNull notNullCheck2 = new ValidityCheckNotNull();
-        String data = "19820411-2380";
+        String data = "9101273414";
         list.add(notNullCheck); list.add(numberCheck); list.add(notNullCheck2);
         ValidityChecker checker = new ValidityChecker(list, data);
         checker.performValidation();
@@ -50,7 +50,6 @@ class ValidityCheckNotNull extends ValidityCheck {
     private static boolean validity;
 
     public boolean validate(Object inputData) {
-        System.err.println("validating null");
         try {
             validity = (inputData == null);
         } catch (Exception exception) {
@@ -63,13 +62,11 @@ class ValidityCheckNotNull extends ValidityCheck {
 
 class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
     private static final int NUMBER_SIZE = 9;
+    private static String civicNumberString;
     private static int controlDigit;
     private static boolean validity;
-    private static String civicNumberString;
 
     public boolean validate(Object inputData) {
-        System.err.println("validating civic number");
-
         try {
             String inputString = inputData.toString();
             inputString = inputString.replaceAll("-", "");
@@ -92,33 +89,27 @@ class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
             return validity;
         }
 
-        System.err.println(civicNumberString);
-        System.err.println("control digit: " + controlDigit);
-
-        // If we get here, then we should have a nine digit integer
-        // and a control digit.
-
-        validity = calculateControlNumber();
+        validity = validateControlNumber();
         return validity;
     }
 
-    private boolean calculateControlNumber() {
+    private boolean validateControlNumber() {
         int controlSum = 0;
+
         for (int characterIndex = 0; characterIndex < NUMBER_SIZE; ++characterIndex) {
             char digitCharacter = civicNumberString.charAt(characterIndex);
             int digit = Integer.parseInt(String.valueOf(digitCharacter));
-
-            if ((characterIndex + 1) % 2 != 0)
-                digit *= 2;
+            if ((characterIndex + 1) % 2 != 0) digit *= 2;
             if (characterIndex == 0 || characterIndex == NUMBER_SIZE - 1)
                 digit = sumOfDigits(digit);
-
             controlSum += digit;
         }
 
-        System.err.println("Control sum " + controlSum);
-        
-        return false;
+        controlSum %= 10;
+        controlSum = 10 - controlSum;
+        controlSum %= 10;
+
+        return (controlSum == controlDigit);
     }
 
     private int sumOfDigits(int n) {
