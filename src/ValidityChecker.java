@@ -16,7 +16,7 @@ public class ValidityChecker {
         ValidityCheckIsPersonalRegistratinonNumber numberCheck =
                 new ValidityCheckIsPersonalRegistratinonNumber();
         ValidityCheckNotNull notNullCheck2 = new ValidityCheckNotNull();
-        String data = "19910127-3416";
+        String data = "19820411-2380";
         list.add(notNullCheck); list.add(numberCheck); list.add(notNullCheck2);
         ValidityChecker checker = new ValidityChecker(list, data);
         checker.performValidation();
@@ -62,9 +62,10 @@ class ValidityCheckNotNull extends ValidityCheck {
 }
 
 class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
-    private static int civicNumber;
+    private static final int NUMBER_SIZE = 9;
     private static int controlDigit;
     private static boolean validity;
+    private static String civicNumberString;
 
     public boolean validate(Object inputData) {
         System.err.println("validating civic number");
@@ -73,18 +74,17 @@ class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
             String inputString = inputData.toString();
             inputString = inputString.replaceAll("-", "");
 
-            if (inputString.length() < 10 || inputString.length() > 12)
+            if (inputString.length() < NUMBER_SIZE + 1 || inputString.length() > NUMBER_SIZE + 3)
                 throw new Exception();
 
             if (inputString.length() == 12)
                 inputString = inputString.substring(2);
 
-            char lastDigit = inputString.charAt(9);
-            inputString = inputString.substring(0, 9);
+            char lastDigit = inputString.charAt(NUMBER_SIZE);
+            inputString = inputString.substring(0, NUMBER_SIZE);
 
-            civicNumber = Integer.parseInt(inputString);
+            civicNumberString = inputString;
             controlDigit = Integer.parseInt(String.valueOf(lastDigit));
-
 
         } catch (Exception exception) {
             System.err.println("Civic number exception");
@@ -92,13 +92,40 @@ class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
             return validity;
         }
 
-        System.err.println("Civic number: " + civicNumber);
+        System.err.println(civicNumberString);
         System.err.println("control digit: " + controlDigit);
 
         // If we get here, then we should have a nine digit integer
         // and a control digit.
 
-        validity = true;
+        validity = calculateControlNumber();
         return validity;
+    }
+
+    private boolean calculateControlNumber() {
+        int controlSum = 0;
+        for (int characterIndex = 0; characterIndex < NUMBER_SIZE; ++characterIndex) {
+            char digitCharacter = civicNumberString.charAt(characterIndex);
+            int digit = Integer.parseInt(String.valueOf(digitCharacter));
+
+            if ((characterIndex + 1) % 2 != 0)
+                digit *= 2;
+            if (characterIndex == 0 || characterIndex == NUMBER_SIZE - 1)
+                digit = sumOfDigits(digit);
+
+            controlSum += digit;
+        }
+
+        System.err.println("Control sum " + controlSum);
+        
+        return false;
+    }
+
+    private int sumOfDigits(int n) {
+        String digits = new Integer(n).toString();
+        int sum = 0;
+        for (char c: digits.toCharArray())
+            sum += c - '0';
+        return sum;
     }
 }
