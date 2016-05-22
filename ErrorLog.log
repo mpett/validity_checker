@@ -1,4 +1,4 @@
-May 23, 2016 1:33:54 AM ValidityChecker errorLog
-INFO: My first log
-May 23, 2016 1:33:54 AM ValidityChecker errorLog
-INFO: Hi How r u?
+May 23, 2016 1:55:28 AM ValidityChecker performValidation
+INFO: Candidate data of type java.lang.String failed ValidityCheckNotNull
+May 23, 2016 1:55:28 AM ValidityChecker performValidation
+INFO: Candidate data of type java.lang.String failed ValidityCheckNotNull

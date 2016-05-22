@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a90a90bc-ac18-4be8-9b49-ba92f78b6c81" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ErrorLog.log" afterPath="$PROJECT_DIR$/ErrorLog.log" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ValidityChecker.java" afterPath="$PROJECT_DIR$/src/ValidityChecker.java" />
     </list>
     <ignored path="ValidityCheck.iws" />
@@ -28,8 +29,8 @@
       <file leaf-file-name="ValidityChecker.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ValidityChecker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6533457" vertical-offset="77" max-vertical-offset="2235">
-              <caret line="52" column="23" selection-start-line="52" selection-start-column="23" selection-end-line="52" selection-end-column="23" />
+            <state vertical-scroll-proportion="-0.8819703" vertical-offset="1624" max-vertical-offset="2700">
+              <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#619#634#0" expanded="true" />
@@ -390,8 +391,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ValidityChecker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6533457" vertical-offset="77" max-vertical-offset="2235">
-          <caret line="52" column="23" selection-start-line="52" selection-start-column="23" selection-end-line="52" selection-end-column="23" />
+        <state vertical-scroll-proportion="-0.8819703" vertical-offset="1624" max-vertical-offset="2700">
+          <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#619#634#0" expanded="true" />

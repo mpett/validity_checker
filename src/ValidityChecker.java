@@ -22,10 +22,20 @@ public class ValidityChecker {
         ValidityCheckIsPersonalRegistratinonNumber numberCheck =
                 new ValidityCheckIsPersonalRegistratinonNumber();
         ValidityCheckNotNull notNullCheck2 = new ValidityCheckNotNull();
-        String data = "9101273414";
+        String data = "9101273416";
         list.add(notNullCheck); list.add(numberCheck); list.add(notNullCheck2);
         ValidityChecker checker = new ValidityChecker(list, data);
         checker.performValidation();
+    }
+
+    public static void validate(List<ValidityCheck> validityCheckList, Object candidateData) {
+        for (ValidityCheck validityCheck : validityCheckList) {
+            if (!validityCheck.validate(candidateData)) {
+                validity = false;
+                errorLogger.info(validityCheck.logMessage());
+            }
+        }
+        validity = true;
     }
 
     public ValidityChecker(List<ValidityCheck> validityCheckList, Object candidateData) {
@@ -34,18 +44,14 @@ public class ValidityChecker {
         prepareErrorLog();
     }
 
-    public static void validate(List<ValidityCheck> validityCheckList, Object candidateData) {
-        for (ValidityCheck validityCheck : validityCheckList) {
-            if (!validityCheck.validate(candidateData))
-                validity = false;
-        }
-
-        validity = true;
-    }
-
     public void performValidation() {
-        for (ValidityCheck validityCheck : validityCheckList)
-            validityCheck.validate(candidateData);
+        for (ValidityCheck validityCheck : validityCheckList) {
+            if (!validityCheck.validate(candidateData)) {
+                validity = false;
+                errorLogger.info(validityCheck.logMessage());
+            }
+        }
+        validity = true;
     }
 
     private void prepareErrorLog() {
@@ -66,12 +72,21 @@ public class ValidityChecker {
 
 abstract class ValidityCheck {
     public abstract boolean validate(Object candidateData);
+
+    public abstract String logMessage();
 }
 
 class ValidityCheckNotNull extends ValidityCheck {
-    private static boolean validity;
+    private boolean validity;
+    private String dataType;
 
     public boolean validate(Object inputData) {
+        try {
+            dataType = inputData.getClass().getTypeName();
+        } catch (Exception exception) {
+            dataType = "NON RESOLVABLE";
+        }
+
         try {
             validity = (inputData == null);
         } catch (Exception exception) {
@@ -80,15 +95,26 @@ class ValidityCheckNotNull extends ValidityCheck {
             return validity;
         }
     }
+
+    public String logMessage() {
+        return "Candidate data of type "
+                + dataType + " failed ValidityCheckNotNull";
+    }
 }
 
 class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
-    private static final int NUMBER_SIZE = 9;
-    private static String civicNumberString;
-    private static int controlDigit;
-    private static boolean validity;
+    private final int NUMBER_SIZE = 9;
+    private String civicNumberString;
+    private int controlDigit;
+    private boolean validity;
+    private String dataType;
 
     public boolean validate(Object inputData) {
+        try {
+            dataType = inputData.getClass().getTypeName();
+        } catch (Exception exception) {
+            dataType = "NON RESOLVABLE";
+        }
 
         try {
             String inputString = inputData.toString();
@@ -113,6 +139,11 @@ class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
 
         validity = validateControlNumber();
         return validity;
+    }
+
+    public String logMessage() {
+        return "Candidate data of type " + dataType +
+                " failed ValidityCheckIsPersonalRegistratinonNumber";
     }
 
     private boolean validateControlNumber() {
