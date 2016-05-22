@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,6 +9,19 @@ public class ValidityChecker {
     private static Object candidateData;
     private static List<ValidityCheck> validityCheckList;
     private static final String LOG_FILE_LOCATION = "/error_log/";
+
+    public static void main(String[] args) {
+        ArrayList<ValidityCheck> list = new ArrayList<ValidityCheck>();
+        ValidityCheckNotNull notNullCheck = new ValidityCheckNotNull();
+        ValidityCheckIsPersonalRegistratinonNumber numberCheck =
+                new ValidityCheckIsPersonalRegistratinonNumber();
+        list.add(notNullCheck); list.add(numberCheck);
+        String data = "lol";
+        numberCheck.performValidation(data);
+        list.get(1).performValidation(data);
+        ValidityChecker checker = new ValidityChecker(list, data);
+        checker.validate();
+    }
 
     public ValidityChecker(List<ValidityCheck> validityCheckList, Object candidateData) {
         this.candidateData = candidateData;
@@ -33,20 +47,17 @@ public class ValidityChecker {
     }
 }
 
-class ValidityCheck {
-    public static boolean validity;
-
-    public ValidityCheck() {
-        validity = true;
-    }
-
-    public static boolean performValidation(Object inputData) {
-        return validity;
-    }
+abstract class ValidityCheck {
+    public abstract boolean performValidation(Object candidateData);
+    //Empty
 }
 
 class ValidityCheckNotNull extends ValidityCheck {
-    public static boolean performValidation(Object inputData) {
+
+    private static boolean validity;
+
+    public boolean performValidation(Object inputData) {
+        System.err.println("validating null");
         try {
             validity = (inputData == null);
         } catch (Exception exception) {
@@ -60,7 +71,10 @@ class ValidityCheckNotNull extends ValidityCheck {
 class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
     private static String personalRegistrationNumber;
 
-    public static boolean performValidation(Object inputData) {
+    private static boolean validity;
+
+    public boolean performValidation(Object inputData) {
+        System.err.println("validating civic number");
         try {
             personalRegistrationNumber = inputData.toString();
         } catch (Exception exception) {
