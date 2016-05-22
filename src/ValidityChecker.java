@@ -1,5 +1,9 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Created by martinpettersson on 22/05/16.
@@ -8,7 +12,9 @@ public class ValidityChecker {
     private static boolean validity;
     private static Object candidateData;
     private static List<ValidityCheck> validityCheckList;
-    private static final String LOG_FILE_LOCATION = "/error_log/";
+    private static Logger errorLogger;
+    private static final String LOG_FILE_LOCATION = "ErrorLog.log";
+
 
     public static void main(String[] args) {
         ArrayList<ValidityCheck> list = new ArrayList<ValidityCheck>();
@@ -25,6 +31,7 @@ public class ValidityChecker {
     public ValidityChecker(List<ValidityCheck> validityCheckList, Object candidateData) {
         this.candidateData = candidateData;
         this.validityCheckList = validityCheckList;
+        prepareErrorLog();
     }
 
     public static void validate(List<ValidityCheck> validityCheckList, Object candidateData) {
@@ -39,6 +46,21 @@ public class ValidityChecker {
     public void performValidation() {
         for (ValidityCheck validityCheck : validityCheckList)
             validityCheck.validate(candidateData);
+    }
+
+    private void prepareErrorLog() {
+        errorLogger = Logger.getLogger("MyLog");
+        FileHandler fh;
+        try {
+            fh = new FileHandler(LOG_FILE_LOCATION);
+            errorLogger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
@@ -67,6 +89,7 @@ class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
     private static boolean validity;
 
     public boolean validate(Object inputData) {
+
         try {
             String inputString = inputData.toString();
             inputString = inputString.replaceAll("-", "");
@@ -82,7 +105,6 @@ class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
 
             civicNumberString = inputString;
             controlDigit = Integer.parseInt(String.valueOf(lastDigit));
-
         } catch (Exception exception) {
             System.err.println("Civic number exception");
             validity = false;
