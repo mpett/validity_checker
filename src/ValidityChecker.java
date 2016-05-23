@@ -6,7 +6,10 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 /**
- * Created by martinpettersson on 22/05/16.
+ * A ValidityChecker that can be used to validate candidate data along
+ * with one or several ValidityChecks in no particular order.
+ *
+ * @author Martin Pettersson
  */
 public class ValidityChecker {
     private static boolean validity;
@@ -22,12 +25,19 @@ public class ValidityChecker {
         ValidityCheckIsPersonalRegistrationNumber numberCheck =
                 new ValidityCheckIsPersonalRegistrationNumber();
         ValidityCheckNotNull notNullCheck2 = new ValidityCheckNotNull();
-        String data = "9101273416";
+        String data = "lol";
+        ArrayList<String> strings = new ArrayList<String>();
+        strings.add(data);
         list.add(notNullCheck); list.add(numberCheck); list.add(notNullCheck2);
-        ValidityChecker checker = new ValidityChecker(list, data);
+        ValidityChecker checker = new ValidityChecker(list, strings);
         checker.performValidation();
     }
 
+    /**
+     * Static validation
+     * @param validityCheckList
+     * @param candidateData
+     */
     public static void validate(List<ValidityCheck> validityCheckList, Object candidateData) {
         for (ValidityCheck validityCheck : validityCheckList) {
             if (!validityCheck.validate(candidateData)) {
@@ -38,6 +48,11 @@ public class ValidityChecker {
         validity = true;
     }
 
+    /**
+     * ValidityChecker constructor
+     * @param validityCheckList
+     * @param candidateData
+     */
     public ValidityChecker(List<ValidityCheck> validityCheckList, Object candidateData) {
         this.candidateData = candidateData;
         this.validityCheckList = validityCheckList;
@@ -70,16 +85,29 @@ public class ValidityChecker {
     }
 }
 
+/**
+ * Abstract base class for ValidityChecks. You can combine
+ * several of these for use in a ValidityChecker.
+ */
 abstract class ValidityCheck {
     public abstract boolean validate(Object candidateData);
 
     public abstract String logMessage();
 }
 
+/**
+ * A ValidityCheck to control if passed candidate data of a
+ * ValidityChecker is not null.
+ */
 class ValidityCheckNotNull extends ValidityCheck {
     private boolean validity;
     private String dataType;
 
+    /**
+     * Checks if inputData is not null.
+     * @param inputData
+     * @return
+     */
     public boolean validate(Object inputData) {
         try {
             dataType = inputData.getClass().getTypeName();
@@ -88,8 +116,7 @@ class ValidityCheckNotNull extends ValidityCheck {
         }
 
         try {
-            if (inputData != null)
-                validity = true;
+            if (inputData != null) validity = true;
         } catch (Exception exception) {
             validity = false;
         } finally {
@@ -103,6 +130,11 @@ class ValidityCheckNotNull extends ValidityCheck {
     }
 }
 
+/**
+ * A ValidityCheck to control if passed candidate data of a
+ * ValidityChecker is a valid Swedish personal registration
+ * number.
+ */
 class ValidityCheckIsPersonalRegistrationNumber extends ValidityCheck {
     private final int NUMBER_SIZE = 9;
     private String civicNumberString;
@@ -110,6 +142,11 @@ class ValidityCheckIsPersonalRegistrationNumber extends ValidityCheck {
     private boolean validity;
     private String dataType;
 
+    /**
+     * Checks if inputData is a valid civic number.
+     * @param inputData
+     * @return
+     */
     public boolean validate(Object inputData) {
         try {
             dataType = inputData.getClass().getTypeName();
@@ -124,16 +161,14 @@ class ValidityCheckIsPersonalRegistrationNumber extends ValidityCheck {
             if (inputString.length() < NUMBER_SIZE + 1 || inputString.length() > NUMBER_SIZE + 3)
                 throw new Exception();
 
-            if (inputString.length() == 12)
+            if (inputString.length() == NUMBER_SIZE + 3)
                 inputString = inputString.substring(2);
 
             char lastDigit = inputString.charAt(NUMBER_SIZE);
             inputString = inputString.substring(0, NUMBER_SIZE);
-
             civicNumberString = inputString;
             controlDigit = Integer.parseInt(String.valueOf(lastDigit));
         } catch (Exception exception) {
-            System.err.println("Civic number exception");
             validity = false;
             return validity;
         }
@@ -147,6 +182,10 @@ class ValidityCheckIsPersonalRegistrationNumber extends ValidityCheck {
                 " failed ValidityCheckIsPersonalRegistrationNumber";
     }
 
+    /**
+     * An algorithm that checks if the final digit of a civic number is valid.
+     * @return
+     */
     private boolean validateControlNumber() {
         int controlSum = 0;
 
@@ -166,10 +205,15 @@ class ValidityCheckIsPersonalRegistrationNumber extends ValidityCheck {
         return (controlSum == controlDigit);
     }
 
+    /**
+     * Computes the digit sum of the integer parameter n.
+     * @param n
+     * @return
+     */
     private int sumOfDigits(int n) {
         String digits = new Integer(n).toString();
         int sum = 0;
-        for (char c: digits.toCharArray())
+        for (char c : digits.toCharArray())
             sum += c - '0';
         return sum;
     }
