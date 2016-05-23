@@ -88,7 +88,8 @@ class ValidityCheckNotNull extends ValidityCheck {
         }
 
         try {
-            validity = (inputData == null);
+            if (inputData != null)
+                validity = true;
         } catch (Exception exception) {
             validity = false;
         } finally {
