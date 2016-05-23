@@ -19,8 +19,8 @@ public class ValidityChecker {
     public static void main(String[] args) {
         ArrayList<ValidityCheck> list = new ArrayList<ValidityCheck>();
         ValidityCheckNotNull notNullCheck = new ValidityCheckNotNull();
-        ValidityCheckIsPersonalRegistratinonNumber numberCheck =
-                new ValidityCheckIsPersonalRegistratinonNumber();
+        ValidityCheckIsPersonalRegistrationNumber numberCheck =
+                new ValidityCheckIsPersonalRegistrationNumber();
         ValidityCheckNotNull notNullCheck2 = new ValidityCheckNotNull();
         String data = "9101273416";
         list.add(notNullCheck); list.add(numberCheck); list.add(notNullCheck2);
@@ -103,7 +103,7 @@ class ValidityCheckNotNull extends ValidityCheck {
     }
 }
 
-class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
+class ValidityCheckIsPersonalRegistrationNumber extends ValidityCheck {
     private final int NUMBER_SIZE = 9;
     private String civicNumberString;
     private int controlDigit;
@@ -144,7 +144,7 @@ class ValidityCheckIsPersonalRegistratinonNumber extends ValidityCheck {
 
     public String logMessage() {
         return "Candidate data of type " + dataType +
-                " failed ValidityCheckIsPersonalRegistratinonNumber";
+                " failed ValidityCheckIsPersonalRegistrationNumber";
     }
 
     private boolean validateControlNumber() {
