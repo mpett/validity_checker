@@ -1,0 +1,6 @@
+May 23, 2016 8:34:31 PM ValidityChecker performValidation
+INFO: Candidate data of type NON RESOLVABLE failed ValidityCheckNotNull
+May 23, 2016 8:34:31 PM ValidityChecker performValidation
+INFO: Candidate data of type NON RESOLVABLE failed ValidityCheckNotNull
+May 23, 2016 8:34:31 PM ValidityChecker performValidation
+INFO: Candidate data of type NON RESOLVABLE failed ValidityCheckIsPersonalRegistrationNumber

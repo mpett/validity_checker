@@ -7,6 +7,9 @@ import java.util.ArrayList;
  * All of the following assertions should succeed and
  * four different error logs should be printed.
  *
+ * Remember to add the -ea option in your JVM to
+ * enable assertions.
+ *
  * @author Martin Pettersson
  */
 public class TestValidityChecker {

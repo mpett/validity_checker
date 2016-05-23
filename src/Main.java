@@ -13,6 +13,7 @@ public class Main {
         // ----------------------------------------------------------------------------------
         // Example usage of a ValidityChecker
         // ----------------------------------------------------------------------------------
+
         ArrayList<ValidityCheck> validityChecks = new ArrayList<ValidityCheck>();
 
         ValidityCheckNotNull notNullCheck = new ValidityCheckNotNull();
@@ -26,13 +27,13 @@ public class Main {
 
         ValidityChecker validityChecker = new ValidityChecker(validityChecks, candidateData);
 
-        // This result will be true.
-        boolean validity = validityChecker.performValidation();
-        System.err.println(validity);
+        // This statement will return true.
+        validityChecker.performValidation();
 
         // ----------------------------------------------------------------------------------
         // Execute the test suite
         // ----------------------------------------------------------------------------------
-        //TestValidityChecker.executeTests();
+
+        TestValidityChecker.executeTests();
     }
 }
