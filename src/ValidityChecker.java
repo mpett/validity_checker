@@ -1,5 +1,5 @@
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -16,37 +16,7 @@ public class ValidityChecker {
     private static Object candidateData;
     private static List<ValidityCheck> validityCheckList;
     private static Logger errorLogger;
-    private static final String LOG_FILE_LOCATION = "ErrorLog.log";
-
-
-    public static void main(String[] args) {
-        ArrayList<ValidityCheck> list = new ArrayList<ValidityCheck>();
-        ValidityCheckNotNull notNullCheck = new ValidityCheckNotNull();
-        ValidityCheckIsPersonalRegistrationNumber numberCheck =
-                new ValidityCheckIsPersonalRegistrationNumber();
-        ValidityCheckNotNull notNullCheck2 = new ValidityCheckNotNull();
-        String data = "lol";
-        ArrayList<String> strings = new ArrayList<String>();
-        strings.add(data);
-        list.add(notNullCheck); list.add(numberCheck); list.add(notNullCheck2);
-        ValidityChecker checker = new ValidityChecker(list, strings);
-        checker.performValidation();
-    }
-
-    /**
-     * Static validation
-     * @param validityCheckList
-     * @param candidateData
-     */
-    public static void validate(List<ValidityCheck> validityCheckList, Object candidateData) {
-        for (ValidityCheck validityCheck : validityCheckList) {
-            if (!validityCheck.validate(candidateData)) {
-                validity = false;
-                errorLogger.info(validityCheck.logMessage());
-            }
-        }
-        validity = true;
-    }
+    private static FileHandler fh;
 
     /**
      * ValidityChecker constructor
@@ -56,24 +26,71 @@ public class ValidityChecker {
     public ValidityChecker(List<ValidityCheck> validityCheckList, Object candidateData) {
         this.candidateData = candidateData;
         this.validityCheckList = validityCheckList;
-        prepareErrorLog();
     }
 
-    public void performValidation() {
+    /**
+     * Set a new list of ValidityChecks
+     * @param validityCheckList
+     */
+    public void setValidityCheckList(List<ValidityCheck> validityCheckList) {
+        this.validityCheckList = validityCheckList;
+    }
+
+    /**
+     * Pass in new candidate data for validation
+     * @param candidateData
+     */
+    public void setCandidateData(Object candidateData) {
+        this.candidateData = candidateData;
+    }
+
+    /**
+     * Static validation
+     * @param validityCheckList
+     * @param candidateData
+     */
+    public static boolean validate(List<ValidityCheck> validityCheckList, Object candidateData) {
+        boolean result = true;
+        for (ValidityCheck validityCheck : validityCheckList) {
+            if (!validityCheck.validate(candidateData)) {
+                if (fh == null) prepareErrorLog(new Date().getTime() + "_error_log.log");
+                errorLogger.info(validityCheck.logMessage());
+                result = false;
+            }
+        }
+
+        // Flush and close the file handler when done.
+        if (!validity) {
+            fh.flush(); fh.close();
+            fh = null;
+        }
+
+        return result;
+    }
+
+    public boolean performValidation() {
+        validity = true;
         for (ValidityCheck validityCheck : validityCheckList) {
             if (!validityCheck.validate(candidateData)) {
                 validity = false;
+                if (fh == null) prepareErrorLog(new Date().getTime() + "_error_log.log");
                 errorLogger.info(validityCheck.logMessage());
             }
         }
-        validity = true;
+
+        // Flush and close the file handler when done.
+        if (!validity) {
+            fh.flush(); fh.close();
+            fh = null;
+        }
+
+        return validity;
     }
 
-    private void prepareErrorLog() {
+    private static void prepareErrorLog(String logFileLocation) {
         errorLogger = Logger.getLogger("MyLog");
-        FileHandler fh;
         try {
-            fh = new FileHandler(LOG_FILE_LOCATION);
+            fh = new FileHandler(logFileLocation);
             errorLogger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
@@ -117,6 +134,7 @@ class ValidityCheckNotNull extends ValidityCheck {
 
         try {
             if (inputData != null) validity = true;
+            else validity = false;
         } catch (Exception exception) {
             validity = false;
         } finally {
